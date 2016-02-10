@@ -1,8 +1,6 @@
 var fs = require('fs')
 var m = require('mustache')
 
-var _json = (dir, json) => {fs.writeFileSync(dir + 'dictum.json', JSON.stringify(json))}
-
 function init(dir) {
 	var content = fs.readdirSync(dir)
 
@@ -39,6 +37,10 @@ function render(dir) {
 	for(var i = 0; i < content.length; i++) {
 		var stat = fs.statSync(dir + content[i])
 		var name = content[i]
+
+		if(['.git', 'README.md', 'LICENCE'].indexOf(name) > -1) {
+			continue
+		}
 
 		if(stat && stat.isDirectory()) {
 			html += render(dir + content[i] + '/')
