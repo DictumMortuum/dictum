@@ -17,5 +17,8 @@
   "license": "GPL-3.0",
   "bugs": {
     "url": "https://github.com/DictumMortuum/dictum/issues"
+  },
+  "dependencies": {
+    "mustache": "^2.2.1"
   }
 }
