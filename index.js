@@ -11,14 +11,20 @@ function init(dir) {
 	}
 
 	for(var i = 0; i < content.length; i++) {
-		var stat = fs.statSync(dir + content[i])
 		var name = content[i]
+		var stat = fs.statSync(dir + name)
 
-		if(stat && stat.isDirectory()) {
-			init(dir + content[i] + '/')
+		if(['.git', 'README.md', 'LICENSE'].indexOf(name) > -1) {
+			continue
 		}
 
-		json.name = ''
+		if(stat && stat.isDirectory()) {
+			init(dir + name + '/')
+		}
+
+		if(json[name] === undefined) {
+			json[name] = ''
+		}
 	}
 
 	fs.writeFileSync(dir + 'dictum.json', JSON.stringify(json))
@@ -35,15 +41,15 @@ function render(dir) {
 	}
 
 	for(var i = 0; i < content.length; i++) {
-		var stat = fs.statSync(dir + content[i])
 		var name = content[i]
+		var stat = fs.statSync(dir + name)
 
-		if(['.git', 'README.md', 'LICENCE'].indexOf(name) > -1) {
+		if(['.git', 'README.md', 'LICENSE'].indexOf(name) > -1) {
 			continue
 		}
 
 		if(stat && stat.isDirectory()) {
-			html += render(dir + content[i] + '/')
+			html += render(dir + name + '/')
 		} else {
 			html += fs.readFileSync(dir + name).toString()
 		}
@@ -53,19 +59,30 @@ function render(dir) {
 }
 
 function parse(dir) {
-	var data = JSON.parse(fs.readFileSync(dir + 'dictum.json'))
-	var html = ''
+	var html = ""
 
-	for(var i = 0; i < data.length; i++) {
-		if(data[i].name.startsWith('[')) {
-			var subdir = data[i].name.substring(1,data[i].name.length-1)
-			html += parse(dir + subdir + '/')
+	try {
+		var json = JSON.parse(fs.readFileSync(dir + 'dictum.json'))
+	} catch(err) {
+		console.log("No dictum.json, use render")
+		return
+	}
+
+	for(var name in json) {
+		var stat = fs.statSync(dir + name)
+
+		if(['.git', 'README.md', 'LICENSE'].indexOf(name) > -1) {
+			continue
+		}
+
+		if(stat && stat.isDirectory()) {
+			html += parse(dir + name + '/')
 		} else {
-			html += fs.readFileSync(dir + data[i].name + '.md').toString()
+			html += fs.readFileSync(dir + name).toString()
 		}
 	}
 
 	return html
 }
 
-console.log(parse('../content/'))
+console.log(init('../content/'))
