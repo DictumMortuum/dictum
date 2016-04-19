@@ -19,9 +19,9 @@
     "url": "https://github.com/DictumMortuum/dictum/issues"
   },
   "dependencies": {
+    "minimist": "^1.2.0",
     "moment": "^2.13.0",
     "mustache": "^2.2.1",
-    "nano": "^6.2.0",
     "pouchdb": "^5.3.1"
   }
 }
