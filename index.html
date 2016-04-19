@@ -60,7 +60,8 @@
   <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.17/daterangepicker.min.js"></script>
   <script src="src/db.js"></script>
   <script>
-    var db = dictum.db('work', 'work2', PouchDB)
+    var db = new dictum.db('test')
+    db.insert({'_id': 'test'})
   </script>
 </body>
 </html>

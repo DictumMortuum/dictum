@@ -1,37 +1,10 @@
 "use strict";
 
 (function() {
-  var db = function(local, remote) {
+  var db = function(name) {
     var db = {}
     var api = {}
-    db.local = new PouchDB(local)
-
-    if (remote !== undefined) {
-      db.remote = new PouchDB(remote)
-
-      db.sync = db.local.sync(db.remote, {
-        live: true,
-        retry: true
-      }).on('change', function(info) {
-        console.log(info)
-      }).on('complete', function (info) {
-        console.log(info)
-      }).on('error', function(err) {
-        console.log(err)
-      })
-
-      db.changes = db.local.changes({
-        since: 'now',
-        live: true,
-        include_docs: true
-      }).on('change', function (result) {
-        console.log(result)
-      }).on('complete', function (info) {
-        console.log(info)
-      }).on('error', function (err) {
-        console.log(err)
-      })
-    }
+    db = new PouchDB(name)
 
     api.query = function(callback, options) {
 
@@ -39,7 +12,7 @@
         options.include_docs = true
       }
 
-      db.local.allDocs(options).then(function (result) {
+      db.allDocs(options).then(function (result) {
         for (var i = 0; i < result.total_rows; i++) {
           if (result.rows[i] !== undefined) {
             callback(result.rows[i].doc)
@@ -49,21 +22,25 @@
     }
 
     api.insert = function(doc) {
-      if(argv.desc !== undefined) {
-        return db.local.put(doc)
-      }
+      return db.put(doc)
     }
 
     api.delete = function(doc) {
-      return db.local.delete(doc)
+      return db.delete(doc)
+    }
+
+    api.reference = function() {
+      return db
     }
 
     return api
   }
 
   if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    var PouchDB = require('pouchdb')
     module.exports = db
   } else {
+    var PouchDB = window.PouchDB
     window.dictum = window.dictum || {}
     window.dictum.db = db
   }
