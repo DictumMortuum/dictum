@@ -1,31 +1,10 @@
 "use strict";
 
-(function(exports){
-
-  var db = {}
-  var web = true
-  db.prefix = ''
-
-  if(typeof require !== undefined) {
-    var PouchDB = require('pouchdb')
-    var moment = require('moment')
-    var argv = require('minimist')(process.argv.slice(2), {
-      default: {
-        _id: moment().toJSON()
-      }
-    })
-
-    if(argv.lang !== undefined) {
-      argv.lang = argv.lang.split(',')
-    }
-
-    delete argv._
-    db.prefix = '/tmp/'
-    web = false
-  }
-
-  exports.init = function(local, remote) {
-    db.local = new PouchDB(db.prefix + local)
+(function() {
+  var db = function(local, remote) {
+    var db = {}
+    var api = {}
+    db.local = new PouchDB(local)
 
     if (remote !== undefined) {
       db.remote = new PouchDB(remote)
@@ -54,94 +33,38 @@
       })
     }
 
-    return db.local
-  }
+    api.query = function(callback, options) {
 
-  exports.query = function(callback, options) {
-
-    if(options.include_docs !== undefined) {
-      options.include_docs = true
-    }
-
-    /*
-    if(typeof start !== undefined) {
-      options.startKey = moment(start).toJSON()
-    }
-
-    if(typeof end !== undefined) {
-      options.endKey = moment(end).toJSON()
-    }*/
-
-    db.local.allDocs(options).then(function (result) {
-      for (var i = 0; i < result.total_rows; i++) {
-        if (result.rows[i] !== undefined) {
-          callback(result.rows[i].doc)
-        }
+      if(options.include_docs !== undefined) {
+        options.include_docs = true
       }
-    })
-  }
 
-  exports.insert = function(doc) {
-    if(argv.desc !== undefined) {
-      return db.local.put(doc)
-    }
-  }
-
-  exports.delete = function(doc) {
-    return db.local.delete(doc)
-  }
-
-  exports.count = {}
-
-  exports.count.day = function(start, end) {
-    return db.local.query({
-      map: function (doc, emit) {
-        emit(doc._id.slice(0, 10))
-      },
-      reduce: '_count'
-    }, {
-      group: true,
-      reduce: true
-    })
-  }
-
-  exports.count.tool = function(startTime, endTime) {
-    return db.local.query({
-      map: function (doc, emit) {
-        if (doc._id > startTime && doc._id < endTime) {
-          if (doc.lang !== undefined) {
-            for (var i = 0; i < doc.lang.length; i++) {
-              emit(doc.lang[i].toLowerCase())
-            }
+      db.local.allDocs(options).then(function (result) {
+        for (var i = 0; i < result.total_rows; i++) {
+          if (result.rows[i] !== undefined) {
+            callback(result.rows[i].doc)
           }
         }
-      },
-      reduce: '_count'
-    }, {
-      group: true,
-      reduce: true
-    })
+      })
+    }
+
+    api.insert = function(doc) {
+      if(argv.desc !== undefined) {
+        return db.local.put(doc)
+      }
+    }
+
+    api.delete = function(doc) {
+      return db.local.delete(doc)
+    }
+
+    return api
   }
 
-  exports.count.type = function(startTime, endTime, weight) {
-    return db.local.query({
-      map: function (doc, emit) {
-        if (doc._id > startTime && doc._id < endTime) {
-          emit(doc.type, 1 / (weight[doc._id.slice(0, 10)] || 1))
-        }
-      },
-      reduce: '_sum'
-    }, {
-      group: true,
-      reduce: true
-    })
+  if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    module.exports = db
+  } else {
+    window.dictum = window.dictum || {}
+    window.dictum.db = db
   }
-
-  if(!web) {
-    exports.init('http://localhost:5984/work')
-    exports.insert(argv).then(function(info){
-      console.log(info)
-    })
-  }
-
-})(typeof exports === undefined ? this['dictum']['db'] = {} : exports);
+})();
