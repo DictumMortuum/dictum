@@ -2,9 +2,8 @@
 
 (function() {
   var db = function(name) {
-    var db = {}
+    var db = new PouchDB(name)
     var api = {}
-    db = new PouchDB(name)
 
     api.query = function(callback, options) {
 
