@@ -59,9 +59,12 @@
   <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.0/moment.min.js"></script>
   <script src="http://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/2.1.17/daterangepicker.min.js"></script>
   <script src="src/db.js"></script>
+  <script src="src/template.js"></script>
   <script>
     var db = new dictum.db('test')
     db.insert({'_id': 'test'})
+    var template = new dictum.template('templates/')
+    template.render('btn', {}, function(a) { console.log(a)})
   </script>
 </body>
 </html>

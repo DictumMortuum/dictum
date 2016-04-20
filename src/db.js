@@ -1,9 +1,9 @@
 "use strict";
 
 (function() {
-  var db = function(name) {
-    var db = new PouchDB(name)
+  var unit = function(name) {
     var api = {}
+    var db = new PouchDB(name)
 
     api.query = function(callback, options) {
 
@@ -37,10 +37,10 @@
 
   if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     var PouchDB = require('pouchdb')
-    module.exports = db
+    module.exports = unit
   } else {
     var PouchDB = window.PouchDB
     window.dictum = window.dictum || {}
-    window.dictum.db = db
+    window.dictum.db = unit
   }
 })();
