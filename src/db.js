@@ -25,7 +25,7 @@
     }
 
     api.delete = function(doc) {
-      return db.delete(doc)
+      return db.remove(doc)
     }
 
     api.reference = function() {

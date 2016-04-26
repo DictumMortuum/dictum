@@ -1,5 +1,7 @@
 #!/usr/bin/nodejs
 
+//deprecated - use client.js instead
+
 var req  = require('request');
 var data = {}
 var date = new Date();

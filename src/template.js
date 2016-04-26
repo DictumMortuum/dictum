@@ -8,7 +8,11 @@
       get(path + selector + '.mustache.html', function(err, template) {
         Mustache.parse(template.toString())
         var rendered = Mustache.render(template.toString(), data)
-        callback(rendered)
+        if(callback !== undefined) {
+          callback(rendered)
+        } else {
+          return rendered
+        }
       })
     }
 

@@ -4,7 +4,7 @@ var argv = require('minimist')(process.argv.slice(2), {
   }
 })
 
-var db = require('./db.js')('http://localhost:5984/work')
+var db = require('../src/db.js')('http://localhost:5984/work')
 
 if(argv.lang !== undefined) {
   argv.lang = argv.lang.split(',')
