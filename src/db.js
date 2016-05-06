@@ -7,11 +7,16 @@
 
     api.query = function(callback, options) {
 
-      if(options.include_docs !== undefined) {
+      if(options !== undefined) {
+        if(options.include_docs === undefined) {
+          options.include_docs = true
+        }
+      } else {
+        options = {}
         options.include_docs = true
       }
 
-      db.allDocs(options).then(function (result) {
+      return db.allDocs(options).then(function (result) {
         for (var i = 0; i < result.total_rows; i++) {
           if (result.rows[i] !== undefined) {
             callback(result.rows[i].doc)
