@@ -19,9 +19,11 @@
     "url": "https://github.com/DictumMortuum/dictum/issues"
   },
   "dependencies": {
+    "bootstrap": "^3.3.6",
+    "bootstrap-daterangepicker": "^2.1.19",
     "minimist": "^1.2.0",
     "moment": "^2.13.0",
     "mustache": "^2.2.1",
-    "pouchdb": "^5.3.1"
+    "pouchdb": "^5.3.2"
   }
 }

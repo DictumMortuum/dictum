@@ -3,14 +3,16 @@
 "use strict";
 
 (function() {
-  var unit = function(path) {
+  var unit = function(template) {
     var api = {}
 
     function ticketParser(ticket) {
       //make sure that there is a dash between jira project name and ticket number.
       if(ticket.search(/-/i) === -1) {
         var n = ticket.search(/[A-Z][0-9]/i) + 1
-        t = [ticket.slice(0, n), '-', ticket.slice(n)].join('')
+        var t = [ticket.slice(0, n), '-', ticket.slice(n)].join('')
+      } else {
+        var t = ticket
       }
 
       return template.render('btn', {
@@ -36,6 +38,9 @@
 
     function dateParser(date) {
       var d = new Date(date)
+
+      var config = {}
+      config.locale = 'el'
 
       return {
         month: d.getFullYear() + '' + d.getMonth(),
@@ -93,7 +98,7 @@
       }
 
       // Add the element to the response.
-      resp.element = template.parse('list', opt)
+      resp.element = template.render('list', opt)
 
       return resp
     }
@@ -103,12 +108,12 @@
 
   if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     var moment = reqire('moment')
-    var template = require('./template.js')('../templates/')
+    //var template = require('./template.js')('../templates/')
     module.exports = unit
   } else {
     var moment = window.moment
     window.dictum = window.dictum || {}
-    var template = new window.dictum.template('../templates')
+    //var template = new window.dictum.template('../templates')
     window.dictum.parser = unit
   }
 })();
