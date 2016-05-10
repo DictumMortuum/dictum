@@ -3,17 +3,25 @@
 (function() {
   var unit = function(path) {
     var api = {}
+    var cache = {}
 
-    api.render = function(selector, data, callback) {
-      get(path + selector + '.mustache.html', function(err, template) {
-        Mustache.parse(template.toString())
-        var rendered = Mustache.render(template.toString(), data)
-        if(callback !== undefined) {
-          callback(rendered)
-        } else {
-          return rendered
-        }
+    api.load = function(selector) {
+      return new Promise(function(resolve, reject) {
+        get(path + selector + '.mustache.html', function(err, template) {
+          if(err) {
+            reject(err)
+          } else {
+            cache[selector] = template.toString()
+            resolve(template)
+          }
+        })
       })
+    }
+
+    api.render = function(selector, data) {
+      var template = cache[selector]
+      Mustache.parse(template)
+      return Mustache.render(template, data)
     }
 
     return api

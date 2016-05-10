@@ -103,17 +103,26 @@
       return resp
     }
 
+    api.init = function() {
+      var tpl = []
+      var templates = ['btn', 'form', 'group', 'list', 'month']
+
+      for(var i = 0; i < templates.length; i++) {
+        tpl.push(template.load(templates[i]))
+      }
+
+      return Promise.all(tpl)
+    }
+
     return api
   }
 
   if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     var moment = reqire('moment')
-    //var template = require('./template.js')('../templates/')
     module.exports = unit
   } else {
     var moment = window.moment
     window.dictum = window.dictum || {}
-    //var template = new window.dictum.template('../templates')
     window.dictum.parser = unit
   }
 })();

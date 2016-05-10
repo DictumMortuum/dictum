@@ -48,51 +48,33 @@
     </div>
   </div>
 
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.2.0/mustache.min.js"></script>
+  <script src="node_modules/mustache/mustache.min.js"></script>
   <script src="node_modules/pouchdb/dist/pouchdb.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/jQuery-linkify/1.1.7/jquery.linkify.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.11.0/moment.min.js"></script>
+  <!--
+  <script src="node_modules/linkifyjs/lib/linkify.js"></script>
+  <script src="node_modules/linkifyjs/lib/linkify-jquery.js"></script>
+-->
+  <script src="node_modules/moment/moment.js"></script>
   <script src="node_modules/bootstrap-daterangepicker/daterangepicker.js"></script>
   <script src="src/db.js"></script>
   <script src="src/template.js"></script>
   <script src="src/query.js"></script>
   <script src="src/parser.js"></script>
+  <script src="src/view.js"></script>
   <script>
     var db = new dictum.db('http://localhost:5984/work')
 
-    db.info().then(function(info) {
-      /* couchdb finished loading */
+    db.init().then(function(info) {
       console.log(info)
 
-      /* testing that template works */
-      var template = new dictum.template('templates/')
-      template.render('btn', {}, function(a) { console.log(a)})
-
-      /* testing that query works */
       var query = new dictum.query(db)
-
-      query.day(moment().startOf('day') , moment()).then(function(response) {
-        query.type(moment().startOf('day') , moment(), response).then(function(response) {
-          console.log(response)
-        }, function(error) {
-          console.error(error)
-        })
-      }, function(error) {
-        console.error(error)
-      })
-
-      /* testing that parser works */
-
+      var template = new dictum.template('templates/')
       var parser = new dictum.parser(template)
 
-      db.query(function(doc) {
-        return parser.handle(doc)
-      }, {}).then(function(response) {
-        console.log(response)
-      }, function(error) {
-        console.error(error)
+      parser.init().then(function() {
+        new dictum.view(db, parser).init()
       })
     })
   </script>

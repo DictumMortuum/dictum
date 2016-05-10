@@ -45,7 +45,7 @@
       return db
     }
 
-    api.info = function() {
+    api.init = function() {
       return db.info()
     }
 
