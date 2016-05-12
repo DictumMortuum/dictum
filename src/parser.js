@@ -66,6 +66,10 @@
         return resp
       }
 
+      // Adding doc identification in response for deletion
+      resp.id = doc._id
+      resp.rev = doc._rev
+
       // Put the date object in the response
       resp.date = args
 

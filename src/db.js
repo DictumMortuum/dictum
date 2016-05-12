@@ -23,6 +23,14 @@
       return options
     }
 
+    api.changes = function() {
+      return db.changes({
+        since: 'now',
+        live: true,
+        include_docs: true
+      })
+    }
+
     api.query = function(callback, options) {
       return db.allDocs(parse(options)).then(function (result) {
         for (var i = 0; i < result.total_rows; i++) {
@@ -39,6 +47,10 @@
 
     api.delete = function(doc) {
       return db.remove(doc)
+    }
+
+    api.remove = function(id, rev) {
+      return db.remove(id, rev)
     }
 
     api.reference = function() {

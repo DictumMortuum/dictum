@@ -74,7 +74,7 @@
       var parser = new dictum.parser(template)
 
       parser.init().then(function() {
-        new dictum.view(db, parser).init()
+        var view = new dictum.view(db, parser).init()
       })
     })
   </script>

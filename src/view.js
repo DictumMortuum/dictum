@@ -20,7 +20,9 @@
       return options
     }
 
-    function handle(doc) {
+    api.handle = function(doc) {
+      doc = parser.handle(doc)
+
       // Insert a new month element
       // args: month, mdesc
       if ($('#' + doc.date.month).length === 0) {
@@ -34,6 +36,10 @@
       }
 
       $(doc.element).appendTo('#' + doc.date.day)
+
+      $(document.getElementById(doc.id)).find('.btn-circle').click(function() {
+        db.remove(doc.id, doc.rev)
+      })
     }
 
     function range(start, end) {
@@ -42,7 +48,7 @@
         $('#home').html("")
 
         for(var i = 0; i < docs.length; i++) {
-          handle(docs[i])
+          api.handle(docs[i])
         }
 
         $('.list-group-item-heading').click(function (e) {
@@ -57,11 +63,6 @@
           }
         })
 
-        $('.btn-circle').click(function () {
-          console.log($(this).closest('list-group-item').attr('id'))
-          $(this).toggleClass('btn-danger')
-        })
-
         $('.list-group-item-heading:not(:first)').click()
       })
     }
@@ -70,7 +71,7 @@
       var lookup = []
 
       function callback(doc) {
-        lookup.push(parser.handle(doc))
+        lookup.push(doc)
       }
 
       return new Promise(function(resolve, reject) {
@@ -97,6 +98,17 @@
       })
 
       range(moment().startOf('month'), moment().endOf('month'))
+
+      db.changes().on('change', function (change) {
+        console.log(change)
+        if (change.deleted) {
+          $(document.getElementById(change.id)).hide()
+        } else {
+          var doc = api.handle(change.doc)
+        }
+      }).on('error', function(err) {
+        console.log(err)
+      })
     }
 
     return api
