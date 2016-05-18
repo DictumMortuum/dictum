@@ -9,6 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="node_modules/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+  <link href="node_modules/chartist/dist/chartist.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="style.css">
   <!--[if lt IE 9]>
@@ -34,13 +35,13 @@
           <div class="panel panel-default col-xs-12 col-md-6">
             <div class="panel-body">
               <a class="btn btn-xs btn-info btn-margin" type="button" href="">Work</a>
-              <div id="chart5" class="donut"></div>
+              <div id="chart1" class="donut"></div>
             </div>
           </div>
           <div class="panel panel-default col-xs-12 col-md-6">
             <div class="panel-body">
               <a class="btn btn-xs btn-info btn-margin" type="button" href="">Languages</a>
-              <div id="chart6" class="donut"></div>
+              <div id="chart2" class="donut"></div>
             </div>
           </div>
         </div>
@@ -58,10 +59,12 @@
 -->
   <script src="node_modules/moment/moment.js"></script>
   <script src="node_modules/bootstrap-daterangepicker/daterangepicker.js"></script>
+  <script src="node_modules/chartist/dist/chartist.min.js"></script>
   <script src="src/db.js"></script>
   <script src="src/template.js"></script>
   <script src="src/query.js"></script>
   <script src="src/parser.js"></script>
+  <script src="src/chart.js"></script>
   <script src="src/view.js"></script>
   <script>
     var db = new dictum.db('http://localhost:5984/work')
@@ -74,7 +77,7 @@
       var parser = new dictum.parser(template)
 
       parser.init().then(function() {
-        var view = new dictum.view(db, parser).init()
+        var view = new dictum.view(db, parser, query).init()
       })
     })
   </script>

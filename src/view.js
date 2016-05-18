@@ -3,7 +3,7 @@
 "use strict";
 
 (function() {
-  var unit = function(db, parser) {
+  var unit = function(db, parser, query) {
     var api = {}
 
     function parse(start, end) {
@@ -50,6 +50,8 @@
         for(var i = 0; i < docs.length; i++) {
           api.handle(docs[i])
         }
+
+        new dictum.chart(query).init(start, end)
 
         $('.list-group-item-heading').click(function (e) {
           if (e.ctrlKey) {

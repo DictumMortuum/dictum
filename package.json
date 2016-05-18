@@ -21,6 +21,7 @@
   "dependencies": {
     "bootstrap": "^3.3.6",
     "bootstrap-daterangepicker": "^2.1.19",
+    "chartist": "^0.9.7",
     "jquery": "^2.2.3",
     "linkifyjs": "^2.0.0",
     "minimist": "^1.2.0",

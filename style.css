@@ -115,3 +115,28 @@ body {
 .col-md-12 {
   padding-right: 0;
 }
+
+.chart-primary {
+  fill: #337ab7;
+}
+
+.chart-success {
+  fill: #5cb85c;
+}
+
+.chart-info {
+  fill: #5bc0de;
+}
+
+.chart-warning {
+  fill: #f0ad4e;
+}
+
+.chart-danger {
+  fill: #d9534f;
+}
+
+.ct-label {
+  fill: black;
+  font-size: 1rem;
+}
