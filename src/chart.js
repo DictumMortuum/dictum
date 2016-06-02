@@ -62,6 +62,23 @@
       return colors[i%colors.length]
     }
 
+    api.transform.bar = function(result) {
+      var i = 0
+      var data = {
+        labels: [],
+        series: []
+      }
+
+      for(var a in result) {
+        var d = result[a]
+
+        data.labels.push(a)
+        data.series.push(d)
+      }
+
+      return data
+    }
+
     api.transform.pie = function(result) {
       var i = 0
       var data = {
