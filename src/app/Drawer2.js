@@ -1,16 +1,16 @@
-import React from 'react';
-import Drawer from 'material-ui/Drawer';
-import MenuItem from 'material-ui/MenuItem';
-import RaisedButton from 'material-ui/RaisedButton';
+import React from 'react'
+import Drawer from 'material-ui/Drawer'
+import MenuItem from 'material-ui/MenuItem'
+import RaisedButton from 'material-ui/RaisedButton'
 
 export default class DrawerSimpleExample extends React.Component {
 
   constructor(props) {
-    super(props);
-    this.state = {open: false};
+    super(props)
+    this.state = {open: false}
   }
 
-  handleToggle = () => this.setState({open: !this.state.open});
+  handleToggle = () => this.setState({open: !this.state.open})
 
   render() {
     return (
@@ -24,6 +24,6 @@ export default class DrawerSimpleExample extends React.Component {
           <MenuItem>Menu Item 2</MenuItem>
         </Drawer>
       </div>
-    );
+    )
   }
 }
