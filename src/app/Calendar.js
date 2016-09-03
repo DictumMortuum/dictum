@@ -22,57 +22,68 @@ export default class DictumCalendar extends Component {
   }
 
   handleDate = (_, date) => {
+
+    if (date === undefined) {
+      date = moment(new Date()).subtract(30, 'days').toISOString()
+    }
+
     this.state.db.allDocs({
       include_docs: true,
       startkey: date,
       //endkey: new Date().toISOString()
     }, function(err, result) {
-      var id, doc
-      var docs = [], temp = []
-
-      console.log(result)
-
-      for (var i = 0; i < result.total_rows; i++) {
-        if (result.rows[i] !== undefined) {
-          if (result.rows[i].doc.type !== undefined) {
-            doc = result.rows[i].doc
-            id = new Date(doc._id).toISOString().substring(0,10)
-
-            if(docs[id] === undefined) {
-              docs[id] = []
-            }
-
-            docs[id].push(doc)
-          }
-        }
-      }
-
-      for(id in docs) {
-        temp.unshift({
-          id: id,
-          docs: docs[id]
-        })
-      }
-
       this.setState({
-        docs: temp
+        docs: result.rows
       })
     }.bind(this))
+
+    this.state.db.changes({
+      since: 'now',
+      live: true,
+      include_docs: true
+    }).on('change', function(change) {
+      this.setState({
+        docs: this.state.docs.concat([change])
+      })
+    }.bind(this)).on('complete', function(info) {
+      console.log(info)
+    }).on('error', function (err) {
+      console.log(err)
+    })
   }
 
   componentDidMount = () => {
-    var date = moment(new Date()).subtract(30, 'days').toISOString()
-    this.handleDate(date)
+    this.handleDate()
   }
 
   handleToggle = () => {
-    console.log(this.state.expanded)
     this.setState({expanded: !this.state.expanded})
   }
 
   render() {
-    var days = this.state.docs.map(doc => {
-      console.log(doc)
+    var i, id, doc, docs = [], temp = []
+
+    for (i = 0; i < this.state.docs.length; i++) {
+      if (this.state.docs[i].doc !== undefined && this.state.docs[i].doc.type !== undefined) {
+
+        doc = this.state.docs[i].doc
+        id = new Date(doc._id).toISOString().substring(0,10)
+
+        if(docs[id] === undefined) {
+          docs[id] = []
+        }
+        docs[id].push(doc)
+      }
+    }
+
+    for(id in docs) {
+      temp.unshift({
+        id: id,
+        docs: docs[id]
+      })
+    }
+
+    var days = temp.map(doc => {
       return (
         <DictumDay
           key={doc.id}
