@@ -49,6 +49,6 @@ export default class DictumAppBar extends React.Component {
 }
 
 DictumAppBar.propTypes = {
-  update: React.PropTypes.function,
-  click: React.PropTypes.function,
+  update: React.PropTypes.func,
+  click: React.PropTypes.func,
 }

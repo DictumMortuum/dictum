@@ -24,8 +24,14 @@ export default class DictumDay extends React.Component {
   }
 
   handleExpandChange = (expanded) => {
-    console.log(this.state.expanded)
     this.setState({expanded: expanded})
+  }
+
+  componentWillReceiveProps = (props) => {
+    this.setState({
+      docs: props.docs,
+      expanded: props.expanded
+    })
   }
 
   render() {
@@ -63,5 +69,5 @@ export default class DictumDay extends React.Component {
 DictumDay.propTypes = {
   docs: React.PropTypes.array,
   date: React.PropTypes.string,
-  expanded: React.PropTypes.boolean
+  expanded: React.PropTypes.bool
 }
