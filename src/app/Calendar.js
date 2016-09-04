@@ -9,51 +9,85 @@ export default class DictumCalendar extends Component {
   constructor(props, context) {
     super(props, context)
 
-    this.handleDate = this.handleDate.bind(this)
+    this.handleFrom = this.handleFrom.bind(this)
+    this.handleTo = this.handleTo.bind(this)
     this.handleToggle = this.handleToggle.bind(this)
     this.componentDidMount = this.componentDidMount.bind(this)
+    this.handleRange = this.handleRange.bind(this)
 
     this.state = {
       db: new pouchdb('http://localhost:5984/work'),
+      sync: undefined,
       open: false,
       expanded: false,
+      date: {
+        from: moment(new Date()).startOf('day').subtract(30, 'days').toISOString(),
+        to: moment(new Date()).toISOString()
+      },
       docs: []
     }
   }
 
-  handleDate = (_, date) => {
-
-    if (date === undefined) {
-      date = moment(new Date()).subtract(30, 'days').toISOString()
-    }
-
+  handleRange = () => {
     this.state.db.allDocs({
       include_docs: true,
-      startkey: date,
-      //endkey: new Date().toISOString()
+      startkey: this.state.date.from,
+      endkey: this.state.date.to
     }, function(err, result) {
       this.setState({
         docs: result.rows
       })
     }.bind(this))
 
-    this.state.db.changes({
+    if (this.state.sync !== undefined) {
+      this.state.sync.cancel()
+    }
+
+    var sync = this.state.db.changes({
       since: 'now',
       live: true,
       include_docs: true
     }).on('change', function(change) {
-      this.setState({
-        docs: this.state.docs.concat([change])
-      })
+      if (change.deleted) {
+        console.log('deleted')
+      } else {
+        this.setState({
+          docs: this.state.docs.concat([change])
+        })
+      }
     }.bind(this)).on('complete', function(info) {
       console.log(info)
     }).on('error', function (err) {
       console.log(err)
     })
+
+    this.setState({
+      sync: sync
+    })
+  }
+
+  handleTo = (_, date) => {
+    this.setState({
+      date: {
+        from: this.state.date.from,
+        to: moment(date).endOf('day').toISOString()
+      }
+    })
+    this.handleRange()
+  }
+
+  handleFrom = (_, date) => {
+    this.setState({
+      date: {
+        from: moment(date).startOf('day').toISOString(),
+        to: this.state.date.to
+      }
+    })
+    this.handleRange()
   }
 
   componentDidMount = () => {
-    this.handleDate()
+    this.handleRange()
   }
 
   handleToggle = () => {
@@ -96,7 +130,11 @@ export default class DictumCalendar extends Component {
 
     return (
       <div>
-        <DictumAppBar click={this.handleToggle} update={this.handleDate} />
+        <DictumAppBar
+          toggle={this.handleToggle}
+          from={this.handleFrom}
+          to={this.handleTo}
+        />
         {days}
       </div>
     )
