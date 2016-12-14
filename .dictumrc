@@ -1,0 +1,11 @@
+{
+	"endpoints": [{
+		"type": "couchdb",
+		"db": "work",
+		"url": "http://localhost:5984/"		
+	}, {
+		"type": "git",
+		"db": "work",
+		"url": "https://gitlab.com/DictumMortuum/work/"
+	}]
+}
