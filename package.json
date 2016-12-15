@@ -38,6 +38,7 @@
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
+    "jsonfile": "^2.4.0",
     "material-ui": "^0.15.0",
     "minimist": "^1.2.0",
     "moment": "^2.14.1",
@@ -47,6 +48,7 @@
     "react": "^15.0.1",
     "react-dom": "^15.0.1",
     "react-tap-event-plugin": "^1.0.0",
+    "simple-git": "^1.65.0",
     "webpack-preset": "^0.2.0",
     "webpack-preset-babel": "^0.2.0",
     "webpack-preset-babel-stage-1": "^0.2.0"
