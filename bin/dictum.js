@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const conf = require('rc')('dictum', {})
+const conf = require('rc')('dictum', { 'push': false })
 const git = require('simple-git')
 const api = {
   'git': require('./api/git'),
@@ -14,12 +14,11 @@ const argv = require('minimist')(process.argv.slice(2), {
 
 var payload = parse(argv)
 
-// http://radek.io/2015/10/27/nodegit/
-
 for(var i = 0; i < conf.endpoints.length; i++) {
-  var c = conf.endpoints[i]
+  var c = Object.assign(conf.endpoints[i], { 'push': conf.push })
+
   if(c.skip === undefined) {
-    api[c.type](c, payload).then(info => console.log(info))
+    api[c.type](c, payload)
   }
 }
 
