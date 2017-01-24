@@ -16,7 +16,7 @@ export default class DictumCalendar extends Component {
     this.handleRange = this.handleRange.bind(this)
 
     this.state = {
-      db: new pouchdb('http://localhost:5984/work'),
+      db: new pouchdb('https://localhost:6984/work'),
       sync: undefined,
       open: false,
       expanded: false,
